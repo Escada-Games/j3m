@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://resources/land.wav" type="AudioStream" id=1]
+[ext_resource path="res://scenes/sfx.gd" type="Script" id=2]
+
+[node name="sfxLand" type="AudioStreamPlayer"]
+stream = ExtResource( 1 )
+volume_db = -10.0
+autoplay = true
+bus = "sfx"
+script = ExtResource( 2 )

@@ -1,0 +1,448 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://scenes/player.gd" type="Script" id=1]
+[ext_resource path="res://scenes/spawner.gd" type="Script" id=2]
+[ext_resource path="res://scenes/platform.tscn" type="PackedScene" id=3]
+[ext_resource path="res://resources/m6x11.ttf" type="DynamicFontData" id=4]
+
+[sub_resource type="Curve" id=1]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.925, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CircleShape2D" id=5]
+radius = 19.0
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends MarginContainer
+
+func _ready():
+	global.connect(\"gameStart\",self,'gameStart')
+	set_physics_process(false)
+func gameStart():
+	set_physics_process(true)
+func _physics_process(delta):
+	self.rect_global_position.x-=delta*250
+"
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0, 0, 0, 0.33 )
+border_width_left = 8
+border_width_top = 12
+border_width_right = 8
+border_width_bottom = 4
+border_color = Color( 0, 0, 0, 1 )
+corner_radius_top_left = 64
+corner_radius_top_right = 64
+corner_radius_bottom_right = 64
+corner_radius_bottom_left = 64
+expand_margin_left = 16.0
+expand_margin_right = 16.0
+expand_margin_top = 16.0
+expand_margin_bottom = 16.0
+
+[sub_resource type="DynamicFont" id=8]
+size = 32
+font_data = ExtResource( 4 )
+
+[sub_resource type="GDScript" id=9]
+script/source = "extends MarginContainer
+func _ready():
+	self.modulate.a=0
+	global.connect(\"gameOver\",self,'makeVisible')
+func makeVisible():
+	$twn.interpolate_property(self,'modulate:a',self.modulate.a,1,0.4,Tween.TRANS_QUINT,Tween.EASE_IN)
+	$twn.start()
+"
+
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 0, 0, 0, 0.33 )
+border_width_left = 8
+border_width_top = 12
+border_width_right = 8
+border_width_bottom = 4
+border_color = Color( 0, 0, 0, 1 )
+corner_radius_top_left = 64
+corner_radius_top_right = 64
+corner_radius_bottom_right = 64
+corner_radius_bottom_left = 64
+
+[sub_resource type="DynamicFont" id=11]
+size = 48
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=12]
+size = 64
+font_data = ExtResource( 4 )
+
+[sub_resource type="GDScript" id=13]
+script/source = "extends Label
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():set_process(true)
+func _process(delta):self.text=str(global.score)
+"
+
+[sub_resource type="StyleBoxFlat" id=14]
+bg_color = Color( 1, 0.345098, 0.345098, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.996078, 0.819608, 0.54902, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+expand_margin_top = 4.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id=15]
+bg_color = Color( 0.74902, 0.345098, 0.345098, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.996078, 0.819608, 0.54902, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+expand_margin_top = 4.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id=16]
+bg_color = Color( 0.956863, 0.345098, 0.4, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.996078, 0.819608, 0.54902, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+expand_margin_top = 4.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="DynamicFont" id=17]
+size = 32
+outline_color = Color( 0.152941, 0.160784, 0.196078, 1 )
+font_data = ExtResource( 4 )
+
+[sub_resource type="GDScript" id=18]
+script/source = "extends Button
+func _ready():pass
+func _on_button_pressed():
+	global.score=-3
+	global.gameHasStarted=false
+	get_tree().reload_current_scene()
+"
+
+[node name="debugRoot" type="Node"]
+__meta__ = {
+"_edit_vertical_guides_": [  ]
+}
+
+[node name="debug2d" type="Node2D" parent="."]
+
+[node name="bgParticles" type="CPUParticles2D" parent="debug2d"]
+position = Vector2( 700, 250 )
+z_index = -1
+amount = 150
+lifetime = 10.0
+speed_scale = 1.2
+randomness = 1.0
+emission_shape = 2
+emission_rect_extents = Vector2( 16, 300 )
+gravity = Vector2( -98, 0 )
+angular_velocity = 5.0
+angular_velocity_random = 1.0
+radial_accel = 10.0
+angle = 180.0
+angle_random = 1.0
+scale_amount = 8.0
+scale_amount_random = 1.0
+scale_amount_curve = SubResource( 1 )
+color = Color( 1, 0.82, 0.55, 0.2 )
+
+[node name="bgParticles2" type="CPUParticles2D" parent="debug2d"]
+position = Vector2( 700, 250 )
+z_index = -1
+amount = 100
+lifetime = 10.0
+speed_scale = 1.2
+randomness = 1.0
+emission_shape = 2
+emission_rect_extents = Vector2( 16, 300 )
+gravity = Vector2( -98, 0 )
+angular_velocity = 5.0
+angular_velocity_random = 1.0
+radial_accel = 10.0
+angle = 180.0
+angle_random = 1.0
+scale_amount = 8.0
+scale_amount_random = 1.0
+scale_amount_curve = SubResource( 1 )
+color = Color( 1, 0.82, 0.55, 0.33 )
+
+[node name="player" type="KinematicBody2D" parent="debug2d" groups=[
+"Player",
+]]
+position = Vector2( 157, 100 )
+z_index = 5
+script = ExtResource( 1 )
+
+[node name="twn" type="Tween" parent="debug2d/player"]
+
+[node name="twnSquish" type="Tween" parent="debug2d/player"]
+
+[node name="triangle" type="Node2D" parent="debug2d/player"]
+position = Vector2( 32, 18.475 )
+scale = Vector2( -1, 1 )
+
+[node name="bg" type="Polygon2D" parent="debug2d/player/triangle"]
+color = Color( 0.152941, 0.160784, 0.196078, 1 )
+antialiased = true
+polygon = PoolVector2Array( 0, 0, 64, 0, 32, -55.426 )
+
+[node name="green" type="Polygon2D" parent="debug2d/player/triangle"]
+position = Vector2( 31, -32 )
+color = Color( 0.34902, 0.788235, 0.647059, 1 )
+antialiased = true
+polygon = PoolVector2Array( -31, 32, -24, 28, 1, -16, 1, -23 )
+
+[node name="red" type="Polygon2D" parent="debug2d/player/triangle"]
+position = Vector2( 31, -32 )
+color = Color( 0.956863, 0.345098, 0.4, 1 )
+antialiased = true
+polygon = PoolVector2Array( -31, 32, 33, 32, 25, 28, -24, 28 )
+
+[node name="blue" type="Polygon2D" parent="debug2d/player/triangle"]
+position = Vector2( 31, -32 )
+color = Color( 0.403922, 0.490196, 0.717647, 1 )
+antialiased = true
+polygon = PoolVector2Array( 1, -23, 33, 32, 25, 28, 1, -16 )
+
+[node name="color" type="Polygon2D" parent="debug2d/player/triangle"]
+position = Vector2( 32, -18.475 )
+rotation = -8.74228e-08
+scale = Vector2( 0.2, 0.2 )
+color = Color( 0.152941, 0.160784, 0.196078, 1 )
+offset = Vector2( -32, 18.475 )
+antialiased = true
+polygon = PoolVector2Array( 0, 0, 64, 0, 32, -55.426 )
+
+[node name="collisionShape2D" type="CollisionShape2D" parent="debug2d/player"]
+shape = SubResource( 5 )
+
+[node name="raycasts" type="Node2D" parent="debug2d/player"]
+
+[node name="raycastL" type="RayCast2D" parent="debug2d/player/raycasts"]
+position = Vector2( -31, 9 )
+enabled = true
+cast_to = Vector2( 0, 20 )
+
+[node name="raycastM" type="RayCast2D" parent="debug2d/player/raycasts"]
+position = Vector2( 0, 9 )
+enabled = true
+cast_to = Vector2( 0, 20 )
+
+[node name="raycastR" type="RayCast2D" parent="debug2d/player/raycasts"]
+position = Vector2( 31, 9 )
+enabled = true
+cast_to = Vector2( 0, 20 )
+
+[node name="spawner" type="Node2D" parent="debug2d"]
+position = Vector2( 698, 467 )
+script = ExtResource( 2 )
+
+[node name="timer" type="Timer" parent="debug2d/spawner"]
+wait_time = 0.5
+autostart = true
+
+[node name="platform" parent="debug2d" instance=ExtResource( 3 )]
+position = Vector2( 157, 140 )
+
+[node name="platform2" parent="debug2d" instance=ExtResource( 3 )]
+position = Vector2( 307, 240 )
+
+[node name="platform3" parent="debug2d" instance=ExtResource( 3 )]
+position = Vector2( 457, 317 )
+
+[node name="platform4" parent="debug2d" instance=ExtResource( 3 )]
+position = Vector2( 607, 410 )
+
+[node name="marginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 32
+custom_constants/margin_top = 32
+custom_constants/margin_left = 32
+custom_constants/margin_bottom = 32
+script = SubResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="panelContainer" type="PanelContainer" parent="marginContainer"]
+margin_left = 244.0
+margin_top = 32.0
+margin_right = 598.0
+margin_bottom = 138.0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 7 )
+
+[node name="controls" type="Label" parent="marginContainer/panelContainer"]
+margin_left = 8.0
+margin_top = 12.0
+margin_right = 346.0
+margin_bottom = 102.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 8 )
+text = "C: rotate clockwise
+X: rotate counterclockwise
+Match the colors"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="panelContainer2" type="PanelContainer" parent="marginContainer"]
+margin_left = 32.0
+margin_top = 424.0
+margin_right = 296.0
+margin_bottom = 468.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+custom_styles/panel = SubResource( 7 )
+
+[node name="start" type="Label" parent="marginContainer/panelContainer2"]
+margin_left = 8.0
+margin_top = 12.0
+margin_right = 256.0
+margin_bottom = 40.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 8 )
+text = "Press X+C to start!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="debugControl" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="marginContainer" type="MarginContainer" parent="debugControl"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 16
+custom_constants/margin_top = 16
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 16
+script = SubResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="marginContainer" type="MarginContainer" parent="debugControl/marginContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 614.0
+margin_bottom = 484.0
+custom_constants/margin_right = 128
+custom_constants/margin_top = 64
+custom_constants/margin_left = 128
+custom_constants/margin_bottom = 64
+
+[node name="panelContainer" type="PanelContainer" parent="debugControl/marginContainer/marginContainer"]
+margin_left = 128.0
+margin_top = 64.0
+margin_right = 470.0
+margin_bottom = 404.0
+custom_styles/panel = SubResource( 10 )
+
+[node name="marginContainer" type="MarginContainer" parent="debugControl/marginContainer/marginContainer/panelContainer"]
+margin_left = 8.0
+margin_top = 12.0
+margin_right = 334.0
+margin_bottom = 336.0
+custom_constants/margin_right = 16
+custom_constants/margin_top = 16
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 16
+
+[node name="vBoxContainer" type="VBoxContainer" parent="debugControl/marginContainer/marginContainer/panelContainer/marginContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 310.0
+margin_bottom = 308.0
+alignment = 1
+
+[node name="hSeparator2" type="HSeparator" parent="debugControl/marginContainer/marginContainer/panelContainer/marginContainer/vBoxContainer"]
+modulate = Color( 1, 1, 1, 0 )
+margin_right = 294.0
+margin_bottom = 47.0
+size_flags_vertical = 3
+
+[node name="label" type="Label" parent="debugControl/marginContainer/marginContainer/panelContainer/marginContainer/vBoxContainer"]
+margin_top = 51.0
+margin_right = 294.0
+margin_bottom = 93.0
+custom_fonts/font = SubResource( 11 )
+text = "Your score:"
+align = 1
+
+[node name="label2" type="Label" parent="debugControl/marginContainer/marginContainer/panelContainer/marginContainer/vBoxContainer"]
+margin_top = 97.0
+margin_right = 294.0
+margin_bottom = 153.0
+custom_fonts/font = SubResource( 12 )
+text = "12345"
+align = 1
+script = SubResource( 13 )
+
+[node name="hSeparator" type="HSeparator" parent="debugControl/marginContainer/marginContainer/panelContainer/marginContainer/vBoxContainer"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 157.0
+margin_right = 294.0
+margin_bottom = 204.0
+size_flags_vertical = 3
+
+[node name="button" type="Button" parent="debugControl/marginContainer/marginContainer/panelContainer/marginContainer/vBoxContainer"]
+margin_top = 208.0
+margin_right = 294.0
+margin_bottom = 240.0
+custom_styles/hover = SubResource( 14 )
+custom_styles/pressed = SubResource( 15 )
+custom_styles/normal = SubResource( 16 )
+custom_fonts/font = SubResource( 17 )
+custom_colors/font_color = Color( 0.996078, 0.819608, 0.54902, 1 )
+text = "Click here to try again!"
+script = SubResource( 18 )
+
+[node name="hSeparator3" type="HSeparator" parent="debugControl/marginContainer/marginContainer/panelContainer/marginContainer/vBoxContainer"]
+modulate = Color( 1, 1, 1, 0 )
+margin_top = 244.0
+margin_right = 294.0
+margin_bottom = 292.0
+size_flags_vertical = 3
+
+[node name="twn" type="Tween" parent="debugControl/marginContainer"]
+[connection signal="timeout" from="debug2d/spawner/timer" to="debug2d/spawner" method="_on_timer_timeout"]
+[connection signal="pressed" from="debugControl/marginContainer/marginContainer/panelContainer/marginContainer/vBoxContainer/button" to="debugControl/marginContainer/marginContainer/panelContainer/marginContainer/vBoxContainer/button" method="_on_button_pressed"]
